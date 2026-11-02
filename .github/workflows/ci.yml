@@ -1,0 +1,78 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: soren-loop-cli
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: soren-loop-cli
+          persist-credentials: false
+      - uses: ./soren-loop-cli/.github/actions/setup
+        with:
+          schema-repo-key: ${{ secrets.SOREN_LOOP_DEPLOY_KEY }}
+      - run: pnpm lint
+
+  typecheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: soren-loop-cli
+          persist-credentials: false
+      - uses: ./soren-loop-cli/.github/actions/setup
+        with:
+          schema-repo-key: ${{ secrets.SOREN_LOOP_DEPLOY_KEY }}
+      - run: pnpm typecheck
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # Add macos-15 at the go-public gate; macOS minutes are billed 10x while the repo is private.
+        os: [ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: soren-loop-cli
+          persist-credentials: false
+      - uses: ./soren-loop-cli/.github/actions/setup
+        with:
+          schema-repo-key: ${{ secrets.SOREN_LOOP_DEPLOY_KEY }}
+      - run: pnpm test
+      - run: pnpm build && node dist/index.js --version
+
+  ci:
+    name: ci
+    if: always()
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Every required job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "job results: $RESULTS"
+          for result in $RESULTS; do
+            [ "$result" = success ] || exit 1
+          done
