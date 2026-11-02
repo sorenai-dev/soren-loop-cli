@@ -25,8 +25,6 @@ jobs:
           path: soren-loop-cli
           persist-credentials: false
       - uses: ./soren-loop-cli/.github/actions/setup
-        with:
-          schema-repo-key: ${{ secrets.SOREN_LOOP_DEPLOY_KEY }}
       - run: pnpm lint
 
   typecheck:
@@ -37,16 +35,13 @@ jobs:
           path: soren-loop-cli
           persist-credentials: false
       - uses: ./soren-loop-cli/.github/actions/setup
-        with:
-          schema-repo-key: ${{ secrets.SOREN_LOOP_DEPLOY_KEY }}
       - run: pnpm typecheck
 
   test:
     strategy:
       fail-fast: false
       matrix:
-        # Add macos-15 at the go-public gate; macOS minutes are billed 10x while the repo is private.
-        os: [ubuntu-24.04]
+        os: [ubuntu-24.04, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -54,8 +49,6 @@ jobs:
           path: soren-loop-cli
           persist-credentials: false
       - uses: ./soren-loop-cli/.github/actions/setup
-        with:
-          schema-repo-key: ${{ secrets.SOREN_LOOP_DEPLOY_KEY }}
       - run: pnpm test
       - run: pnpm build && node dist/index.js --version
 
