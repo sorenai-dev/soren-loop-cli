@@ -6,4 +6,4 @@ must be justified here (RFC `02` §2). `scripts/check-deps.mjs` fails CI when a 
 
 | Package | Why | Source |
 |---------|-----|--------|
-| `@sorenai/loop-schema` | Shared API types and canonical hashing vectors with the server | `sorenai-dev/soren-loop`, linked locally until the go-public gate (decision 35) |
+| `@sorenai/loop-schema` | Shared API types and canonical hashing vectors with the server | `sorenai-dev/soren-loop`, linked locally until the release gate (decisions 35, 36) |

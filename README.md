@@ -10,7 +10,7 @@ Ada and Zod reviewers.
 ## Development
 
 Requires Node 24 (`.nvmrc`), pnpm (pinned in `package.json`), and a checkout of
-`sorenai-dev/soren-loop` **next to this one**: until the go-public gate, `@sorenai/loop-schema`
+`sorenai-dev/soren-loop` **next to this one**: until the release gate, `@sorenai/loop-schema`
 is linked from `../soren-loop/packages/schema` rather than installed from npm.
 
 ```bash
