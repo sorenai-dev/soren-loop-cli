@@ -1,0 +1,13 @@
+{
+  "name": "soren-loop",
+  "owner": {
+    "name": "sorenai.dev"
+  },
+  "plugins": [
+    {
+      "name": "soren-loop",
+      "source": "./plugin",
+      "description": "Plan and build approved soren-loop feature requests with the tdd-pair loop"
+    }
+  ]
+}

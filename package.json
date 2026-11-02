@@ -1,0 +1,46 @@
+{
+  "name": "soren-loop",
+  "version": "0.0.0",
+  "description": "Build approved soren-loop feature requests locally with Claude Code",
+  "license": "Apache-2.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sorenai-dev/soren-loop-cli.git"
+  },
+  "bin": {
+    "soren-loop": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "plugin",
+    ".claude-plugin"
+  ],
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.28.10",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint . && node scripts/check-action-pins.mjs .github/workflows .github/actions/setup && node scripts/check-deps.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+  },
+  "dependencies": {
+    "@sorenai/loop-schema": "link:../soren-loop/packages/schema"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.14.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
+  }
+}
